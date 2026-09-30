@@ -2,36 +2,36 @@
 
 # ✎ Griffonne
 
-**Transforme ton écriture manuscrite en vraie police, avec plusieurs variantes de chaque lettre qui alternent naturellement.**
+**Turn your handwriting into a real font, with several variants of every letter that alternate naturally.**
 
-Imprime une feuille · écris · scanne · installe ta police.
+Print a sheet · write · scan · install your font.
 
-<img src="docs/img/variantes.png" alt="Comparaison sans et avec variantes" width="720">
+<img src="docs/img/variantes.png" alt="Comparison without and with variants" width="720">
 
-<sub>Exemple généré à partir d'une police cursive système, pas d'une vraie écriture. Avec la tienne, l'effet est plus marqué.</sub>
+<sub>Example generated from a system cursive font, not from real handwriting. With yours, the effect is more pronounced. (Captions are in French: *sans variantes* = without variants, *avec Griffonne* = with Griffonne.)</sub>
 
 </div>
 
 ---
 
-## Pourquoi Griffonne ?
+## Why Griffonne?
 
-Une police manuscrite classique répète toujours le même « a », le même « e »… et ça se voit tout de suite : le texte fait *ordinateur*. Griffonne conserve **plusieurs versions écrites de chaque caractère** et choisit laquelle afficher d'après le contexte, comme le fait une vraie main.
+A typical handwriting font repeats the exact same "a", the same "e"… and it shows immediately: the text looks *computer-made*. Griffonne keeps **several handwritten versions of each character** and picks which one to display based on context, the way a real hand would.
 
-- 🖨️ **Feuille modèle prête à imprimer** (PDF A4), avec lignes-guides pour respecter la ligne de base
-- 📷 **Scan ou simple photo** : redressement automatique, correction des ombres, pages dans le désordre ou à l'envers
-- 🔁 **Variantes naturelles** : 3 à 8 formes par caractère, jamais deux fois la même de suite
-- 🧬 **Variantes synthétiques** : si tu as écrit 3 versions, Griffonne en dérive d'autres, légèrement déformées
-- 🔤 **Sortie `.otf` et `.ttf`**, avec accents français, ponctuation et chiffres
-- 🔒 **100 % local** : rien ne quitte ta machine
+- 🖨️ **Ready-to-print template sheet** (A4 PDF) with guide lines so your letters sit on the baseline
+- 📷 **Scan or just take a photo**: automatic deskewing, shadow correction, pages in any order or upside down
+- 🔁 **Natural variants**: 3 to 8 shapes per character, never the same one twice in a row
+- 🧬 **Synthetic variants**: if you wrote 3 versions, Griffonne derives more, slightly distorted
+- 🔤 **`.otf` and `.ttf` output**, including French accents, punctuation and digits
+- 🔒 **100% local**: nothing leaves your machine
 
 <div align="center">
-<img src="docs/img/interface.png" alt="Interface de Griffonne" width="640">
+<img src="docs/img/interface.png" alt="Griffonne interface" width="640">
 </div>
 
 ## Installation
 
-Prérequis : **Python 3.10 ou plus récent**.
+Requirements: **Python 3.10 or newer**.
 
 ```bash
 git clone https://github.com/timal-o/griffonne.git
@@ -40,115 +40,117 @@ python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
 
-Sous Windows, remplace `.venv/bin/` par `.venv\Scripts\`.
+On Windows, replace `.venv/bin/` with `.venv\Scripts\`.
 
-## Utilisation
+## Usage
 
 ```bash
 .venv/bin/python app.py
 ```
 
-L'interface s'ouvre sur <http://localhost:8765>. Option `--no-open` pour ne pas ouvrir le navigateur.
+The interface opens at <http://localhost:8765>. Pass `--no-open` to keep the browser from opening.
 
-### 1. Imprimer la feuille
+> The interface is currently in French.
 
-Choisis les jeux de caractères et le nombre de variantes à écrire par lettre (**3 à 5** est un bon compromis), puis télécharge le PDF.
+### 1. Print the sheet
+
+Pick the character sets and how many variants to write per letter (**3 to 5** is a good compromise), then download the PDF.
 
 | | |
 |---|---|
-| Format | A4, **échelle 100 %**, sans « ajuster à la page » |
-| Stylo | Noir ou bleu foncé, trait franc. Évite le crayon à papier clair |
-| Écriture | Pose le **bas des lettres sur la ligne pleine** ; laisse les descendantes (g, p, y…) passer dessous |
-| Bords | Ne touche pas aux cadres et reste dans ta case |
-| Variantes | Écris volontairement chaque version un peu différemment |
+| Format | A4, **100% scale**, no "fit to page" |
+| Pen | Black or dark blue, bold stroke. Avoid light pencil |
+| Writing | Put the **bottom of your letters on the solid line**; let descenders (g, p, y…) hang below it |
+| Edges | Don't touch the frames and stay inside your box |
+| Variants | Deliberately write each version a little differently |
 
-<div align="center"><img src="docs/img/feuille.png" alt="Page 1 de la feuille modèle" width="420"></div>
+<div align="center"><img src="docs/img/feuille.png" alt="Page 1 of the template sheet" width="420"></div>
 
-### 2. Scanner ou photographier
+### 2. Scan or photograph
 
-Dépose tes images dans la page. Chaque feuille doit montrer **les 4 carrés noirs des coins en entier**. L'ordre des pages n'a pas d'importance.
+Drop your images into the page. Each sheet must show **all 4 black corner squares**. Page order doesn't matter.
 
-- Une photo bien éclairée suffit, un scan à 200-300 dpi est idéal.
-- La galerie affiche ce qui a été extrait de chaque case. **Clique une case ratée** pour l'exclure.
-- Le curseur *Seuil d'encre* : baisse-le si des traits de guide apparaissent, monte-le si ton écriture est fine.
+- A well-lit photo is enough; a 200-300 dpi scan is ideal.
+- The gallery shows what was extracted from each box. **Click a bad box** to exclude it.
+- The *ink threshold* slider: lower it if guide lines show up, raise it if your writing is thin.
 
-### 3. Créer la police
+### 3. Create the font
 
-| Réglage | Effet |
+| Setting | Effect |
 |---|---|
-| Variantes par caractère | Nombre total de formes disponibles (réelles + synthétiques) |
-| Variations synthétiques | Force des déformations des variantes générées (0 = copies exactes) |
-| Espacement des lettres | Marge de part et d'autre de chaque glyphe |
-| Largeur de l'espace | Largeur du caractère espace |
-| Taille | Échelle globale par rapport à ce que tu as écrit |
-| Arrondi des contours | 0 = angles vifs, 1,33 = très arrondi |
+| Variants per character | Total number of shapes available (real + synthetic) |
+| Synthetic variation | Strength of the distortions applied to generated variants (0 = exact copies) |
+| Letter spacing | Margin on each side of every glyph |
+| Space width | Width of the space character |
+| Size | Global scale relative to what you wrote |
+| Contour smoothing | 0 = sharp corners, 1.33 = very round |
 
-Télécharge le `.otf` ou le `.ttf`, double-clique pour l'installer. L'aperçu intégré permet de comparer avec et sans variantes, et « Autre tirage » change la graine aléatoire.
+Download the `.otf` or `.ttf` and double-click to install it. The built-in preview lets you compare with and without variants, and "Autre tirage" (another draw) changes the random seed.
 
-## Compatibilité
+## Compatibility
 
-Le choix de la variante repose sur la fonctionnalité OpenType **`calt`** (*contextual alternates*).
+Variant selection relies on the OpenType **`calt`** feature (*contextual alternates*).
 
-| Environnement | Variantes |
+| Environment | Variants |
 |---|---|
-| Navigateurs (testé dans Chrome) | ✅ |
-| Logiciels de PAO (Adobe, Affinity) | ✅ attendu, non testé |
-| Word, Google Docs, Canva, Pages… | ⚠️ Dépend du logiciel. S'il ignore `calt`, tu obtiens une seule forme par lettre |
+| Web browsers (tested in Chrome) | ✅ |
+| Desktop publishing (Adobe, Affinity) | ✅ expected, untested |
+| Word, Google Docs, Canva, Pages… | ⚠️ Depends on the app. If it ignores `calt`, you get a single shape per letter |
 
-La police reste utilisable partout : la forme de base de chaque lettre est toujours présente.
+The font stays usable everywhere: the base shape of every letter is always present.
 
-## Limites connues
+## Known limitations
 
-- Le tirage est **déterministe** : un même texte donne toujours le même rendu (la variante dépend des lettres voisines, pas d'un vrai hasard à l'affichage).
-- Pas de ligatures ni de lettres liées (écriture cursive continue).
-- Pas de crénage : l'espacement est uniforme, réglable globalement.
-- Les majuscules accentuées sont décochées par défaut pour limiter le nombre de pages.
-- Les tracés sont réalisés à partir d'une image : la qualité dépend de celle du scan.
+- The selection is **deterministic**: the same text always renders the same way (the variant depends on neighboring letters, not on true randomness at display time).
+- No ligatures or joined letters (continuous cursive).
+- No kerning: spacing is uniform, adjustable globally.
+- Accented capitals are unchecked by default to keep the page count down.
+- Outlines are traced from an image, so quality depends on your scan.
 
-## Tester sans écrire à la main
+## Try it without writing by hand
 
-Un script fabrique de fausses photos de feuilles remplies avec une police cursive système (macOS) :
+A script fabricates fake photos of filled-in sheets using a system cursive font (macOS):
 
 ```bash
 .venv/bin/python -c "from fontcreator import project; project.save_spec(['lower','upper','digits','punct','fr_lower'], 3)"
-.venv/bin/python tests/fake_scan.py       # crée work/fake/scan_*.jpg
-.venv/bin/python tests/run_pipeline.py    # ingère et construit work/out/TestHand.otf
+.venv/bin/python tests/fake_scan.py       # creates work/fake/scan_*.jpg
+.venv/bin/python tests/run_pipeline.py    # ingests them and builds work/out/TestHand.otf
 ```
 
-## Structure du projet
+## Project structure
 
 ```
-app.py                 serveur local (bibliothèque standard uniquement)
-static/                interface web (HTML + JS, sans dépendance)
+app.py                 local server (standard library only)
+static/                web interface (HTML + JS, no dependencies)
 fontcreator/
-  layout.py            géométrie de la feuille, rendu PDF
-  scan.py              détection des coins, redressement, extraction des cases
-  build.py             vectorisation, variantes synthétiques, table GSUB, OTF/TTF
-  project.py           état du projet (dossier work/)
-tests/                 génération de fausses photos, pipeline de bout en bout
-docs/                  documentation technique
+  layout.py            sheet geometry, PDF rendering
+  scan.py              corner detection, deskewing, box extraction
+  build.py             vectorization, synthetic variants, GSUB table, OTF/TTF
+  project.py           project state (work/ folder)
+tests/                 fake photo generation, end-to-end pipeline
+docs/                  technical documentation
 ```
 
-Le fonctionnement détaillé est décrit dans [docs/fonctionnement.md](docs/fonctionnement.md).
+How it works in detail is described in [docs/fonctionnement.md](docs/fonctionnement.md) (in French).
 
-## Technologies
+## Built with
 
-[fontTools](https://github.com/fonttools/fonttools) (assemblage de police, compilation des règles OpenType) ·
-[OpenCV](https://opencv.org/) (redressement, seuillage) ·
-[potracer](https://github.com/tatarize/potrace) (vectorisation, port Python de [Potrace](https://potrace.sourceforge.net/)) ·
-[Pillow](https://python-pillow.org/) (rendu de la feuille)
+[fontTools](https://github.com/fonttools/fonttools) (font assembly, OpenType rule compilation) ·
+[OpenCV](https://opencv.org/) (deskewing, thresholding) ·
+[potracer](https://github.com/tatarize/potrace) (vectorization, Python port of [Potrace](https://potrace.sourceforge.net/)) ·
+[Pillow](https://python-pillow.org/) (sheet rendering)
 
-## Licence
+## License
 
-Griffonne est distribué sous licence [Creative Commons Attribution - Pas d'Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 (CC BY-NC-SA 4.0)](LICENSE).
+Griffonne is released under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE) license.
 
 [![CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-- ✅ **Utiliser, copier, partager et modifier** librement.
-- 📝 **Attribution** : cite l'auteur et indique les modifications que tu as faites.
-- ❌ **Pas d'utilisation commerciale** : tu ne peux pas le vendre ni l'intégrer à un produit ou service payant.
-- 🔁 **Partage dans les mêmes conditions** : une version modifiée doit être publiée sous la même licence.
+- ✅ **Use, copy, share and modify** freely.
+- 📝 **Attribution**: credit the author and indicate any changes you made.
+- ❌ **No commercial use**: you may not sell it or include it in a paid product or service.
+- 🔁 **ShareAlike**: a modified version must be published under the same license.
 
 Copyright (c) 2026 Malo
 
-> Creative Commons ne recommande pas ses licences pour du code source (elles ne traitent pas les brevets, par exemple). Ici, elles ont l'avantage d'être très connues et reconnues par GitHub. Ce n'est pas une licence « open source » au sens de l'OSI, car elle interdit l'usage commercial.
+> Creative Commons does not recommend its licenses for source code (they don't address patents, for example). Here they have the advantage of being widely known and recognized by GitHub. This is not an "open source" license in the OSI sense, since it forbids commercial use.
