@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Griffonne</title>
+<style>
+:root{
+  --bg:#f7f5f0; --card:#fff; --ink:#1d1b26; --muted:#77747f; --line:#e4e0d8;
+  --accent:#3b3bd9; --accent-soft:#e9e9fb; --ok:#1d8a4b; --bad:#c4321f;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#15141a;--card:#1f1e26;--ink:#eeecf3;--muted:#9b98a6;--line:#33313d;--accent:#8f8fff;--accent-soft:#2a2a4a;--ok:#4cc37f;--bad:#ff7a66}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:28px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 28px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+h2{font-size:18px;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+h2 .n{background:var(--accent);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-grid;place-items:center;font-size:14px}
+label{cursor:pointer}
+.groups{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.groups label{border:1px solid var(--line);border-radius:999px;padding:5px 12px;display:flex;gap:6px;align-items:center}
+.groups label:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:10px 0}
+button,.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:var(--accent-soft);color:var(--accent)}
+button:disabled{opacity:.5;cursor:wait}
+.muted{color:var(--muted)}
+.hint{color:var(--muted);font-size:13px}
+input[type=number],input[type=text]{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 8px;font:inherit;width:90px}
+input[type=text]{width:180px}
+input[type=range]{accent-color:var(--accent);vertical-align:middle}
+#drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s}
+#drop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+#files div{padding:3px 0;font-size:14px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.chip{padding:2px 10px;border-radius:999px;border:1px solid var(--line);font-size:13px}
+.chip.on{background:var(--ok);border-color:var(--ok);color:#fff}
+#gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-top:12px;max-height:520px;overflow:auto;padding:4px}
+.ch{border:1px solid var(--line);border-radius:10px;padding:6px;display:flex;gap:6px;align-items:center}
+.ch b{font-size:22px;width:26px;text-align:center}
+.cell{position:relative;width:54px;height:60px;border:1px solid var(--line);border-radius:5px;background:#fff;overflow:hidden;cursor:pointer;flex:none}
+.cell img{width:100%;height:100%;display:block}
+.cell.empty{opacity:.35}.cell.off{outline:2px solid var(--bad);opacity:.4}
+.cell.off::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:var(--bad);font-size:26px;font-weight:700}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 28px}
+.grid2 label{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.grid2 label>span{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.grid2 output{width:38px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+#preview{width:100%;min-height:150px;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;color:#111;font-size:48px;line-height:1.35;outline:none}
+#tplimg{max-width:180px;border:1px solid var(--line);border-radius:6px;float:right;margin:0 0 8px 16px}
+.toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:12px 0}
+.msg{margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Griffonne</h1>
+  <p class="sub">Imprime une feuille, écris tes lettres à la main, scanne : tu obtiens une vraie police, avec plusieurs variantes de chaque lettre qui alternent au hasard.</p>
+
+  <section id="s1">
+    <h2><span class="n">1</span> La feuille à imprimer</h2>
+    <img id="tplimg" alt="aperçu de la page 1">
+    <div class="groups" id="groups"></div>
+    <div class="row">
+      <label>Variantes à écrire par caractère
+        <input type="number" id="variants" min="1" max="8" value="3">
+      </label>
+      <span class="hint">3 à 5 : c'est le bon compromis. Le reste sera complété par des variantes synthétiques.</span>
+    </div>
+    <div class="row">
+      <span id="tplinfo" class="muted"></span>
+    </div>
+    <div class="row">
+      <a class="btn" id="pdf" href="/api/template.pdf">Télécharger le PDF</a>
+      <span class="hint">Imprime en A4, échelle 100 %, sans « ajuster à la page ». Écris au stylo noir/bleu foncé (pas de crayon trop clair).</span>
+    </div>
+  </section>
+
+  <section id="s2">
+    <h2><span class="n">2</span> Scanner / photographier</h2>
+    <div id="drop">Dépose ici les photos ou scans de tes pages (JPG, PNG…) — ou clique pour choisir<br>
+      <span class="hint">Les 4 carrés noirs des coins doivent être visibles. Les pages peuvent être dans le désordre et même à l'envers.</span></div>
+    <input type="file" id="pick" accept="image/*" multiple hidden>
+    <div id="files"></div>
+    <div class="chips" id="pages"></div>
+    <div class="toolbar">
+      <label>Seuil d'encre <input type="range" id="thr" min="70" max="200" value="150"> <output id="thrv">150</output></label>
+      <span class="hint">Baisse-le si des traits de guide apparaissent, monte-le si ton écriture est trop fine.</span>
+      <button class="secondary" id="reset">Effacer les scans</button>
+    </div>
+    <div class="hint">Clique une case pour l'exclure de la police (✕) si elle est ratée.</div>
+    <div id="gallery"></div>
+  </section>
+
+  <section id="s3">
+    <h2><span class="n">3</span> Créer la police</h2>
+    <div class="grid2">
+      <label>Nom <input type="text" id="family" value="MonEcriture"></label>
+      <label>Variantes par caractère <span><input type="range" id="nvar" min="2" max="8" value="5"><output></output></span></label>
+      <label>Variations synthétiques <span><input type="range" id="jitter" min="0" max="100" value="70"><output></output></span></label>
+      <label>Espacement des lettres <span><input type="range" id="sb" min="-20" max="140" value="40"><output></output></span></label>
+      <label>Largeur de l'espace <span><input type="range" id="space" min="120" max="600" value="280"><output></output></span></label>
+      <label>Taille (%) <span><input type="range" id="size" min="60" max="140" value="100"><output></output></span></label>
+      <label>Arrondi des contours <span><input type="range" id="smooth" min="0" max="133" value="100"><output></output></span></label>
+    </div>
+    <div class="row">
+      <button id="build">Créer la police</button>
+      <span id="buildmsg" class="muted"></span>
+    </div>
+    <div id="result" hidden>
+      <div class="row">
+        <a class="btn" id="dlotf" href="#">Télécharger .otf</a>
+        <a class="btn secondary" id="dlttf" href="#">Télécharger .ttf</a>
+        <span class="hint" id="resinfo"></span>
+      </div>
+      <div class="toolbar">
+        <label><input type="checkbox" id="calt" checked> Variantes aléatoires (calt)</label>
+        <label>Taille <input type="range" id="fs" min="20" max="120" value="48"></label>
+        <button class="secondary" id="reroll" title="Change la graine aléatoire et régénère">Autre tirage</button>
+      </div>
+      <div id="preview" contenteditable spellcheck="false">Salut ! Voici mon écriture : elle appelle ses tantes, et chaque lettre change un peu à chaque fois. 0123456789</div>
+      <p class="hint">La règle « calt » choisit la variante d'après les lettres voisines. Elle marche dans les navigateurs et les logiciels Adobe/Affinity ; certains logiciels (Word, Google Docs, Canva…) peuvent l'ignorer et n'utiliseront alors qu'une seule forme par lettre.</p>
+    </div>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
